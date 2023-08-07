@@ -2,8 +2,13 @@ const displayEl = document.querySelector('.display-chord');
 const playButton = document.querySelector('#play-button');
 playButton.addEventListener('click', () => {
     playButton.innerHTML = 'playing';
+    playButton.disabled = true;
     displayEl.innerHTML = null;
     setupAudioProcessor();
+    setTimeout(() => {
+        playButton.disabled = false;
+        playButton.innerHTML = 'play';
+    }, chordsInput.valueAsNumber * sweepLength * 1000)
 });
 
 const notesInput = document.querySelector('#notes');
@@ -12,6 +17,10 @@ const limitInput = document.querySelector('#limit');
 
 // master controls
 let filterFreq = 1000;
+const sweepLength = 20;
+const attackTime = 5;
+const releaseTime = 5;
+let baseFreq = 30;
 
 function setupAudioProcessor() {
     const context = new AudioContext();
@@ -85,11 +94,6 @@ function setupAudioProcessor() {
     masterGain
         // .connect(filter)
         .connect(context.destination);
-
-    const sweepLength = 20;
-    const attackTime = 5;
-    const releaseTime = 5;
-    let baseFreq = 30;
 
     function createChords(numOfNotes, numOfChords, limit = 13) {
         let array = [];
