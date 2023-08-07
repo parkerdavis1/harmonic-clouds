@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>〜</title>
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"> -->
     <style>
+        @counter-style test {
+            system: cyclic;
+            symbols: 〜;
+            suffix: " ";
+        }
         fieldset {
             display: grid;
             grid-template-columns: auto auto;
@@ -25,6 +30,10 @@
         
         button {
             grid-column: span 2;
+        }
+
+        ul {
+            list-style-type: test;
         }
     </style>
 </head>

@@ -8,7 +8,7 @@ playButton.addEventListener('click', () => {
     setTimeout(() => {
         playButton.disabled = false;
         playButton.innerHTML = 'play';
-    }, chordsInput.valueAsNumber * sweepLength * 1000)
+    }, chordsInput.valueAsNumber * 10 * 1000)
 });
 
 const notesInput = document.querySelector('#notes');
@@ -71,7 +71,7 @@ function setupAudioProcessor() {
 
     function displayChord(chord) {
         const liEl = document.createElement('li');
-        liEl.innerHTML = chord.join(' / ');
+        liEl.innerHTML = chord.join(', ');
         displayEl.appendChild(liEl);
     }
 
