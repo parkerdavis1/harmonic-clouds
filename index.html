@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+        fieldset {
+            display: grid;
+            grid-template-columns: auto auto;
+            justify-content: start;
+            align-items: center;
+            gap: 0.5rem 1rem;
+            border-radius: 1rem;
+            width: fit-content;
+            padding: 2rem;
+        }
+
+        input[type="number"] {
+            /* width: min-content; */
+        }
+        
+        button {
+            grid-column: span 2;
+        }
+    </style>
+</head>
+<body>
+    <fieldset>
+        <label for="notes">
+            # notes in each chord
+        </label>
+        <input type="number" min="1" max="10" id="notes" value="4">
+        <label>
+            # chords
+        </label>
+        <input type="number" min="1" id="chords" value="10">
+        <label>
+            Harmonic limit
+        </label>
+        <input type="number" min="0" max="31" id="limit" value="13">
+        <button id="play-button">play sound</button>
+    </fieldset>
+    <ul class="display-chord"></ul>
+    <script src="audio.js"></script>
+</body>
+</html>
