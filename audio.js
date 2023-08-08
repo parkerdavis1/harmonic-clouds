@@ -14,7 +14,7 @@ playButton.addEventListener('click', () => {
         notesInput.disabled = false;
         chordsInput.disabled = false;
         limitInput.disabled = false;
-    }, chordsInput.valueAsNumber * 10 * 1000)
+    }, chordsInput.valueAsNumber * timeBetweenChords)
 });
 
 const notesInput = document.querySelector('#notes');
@@ -28,7 +28,8 @@ let filterFreq = filterFreqInput.value;
 const sweepLength = 30;
 const attackTime = 10;
 const releaseTime = 10;
-let baseFreq = 30;
+const baseFreq = 30;
+const timeBetweenChords = 15000;
 
 function setupAudioProcessor() {
     const context = new AudioContext();
@@ -92,7 +93,7 @@ function setupAudioProcessor() {
             // console.log('playchords', array[i]);
             setTimeout(() => {
                 playChord(array[i], i);
-            }, 15000 * i);
+            }, timeBetweenChords * i);
         }
     }
 
