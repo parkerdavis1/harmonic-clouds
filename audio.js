@@ -4,22 +4,30 @@ playButton.addEventListener('click', () => {
     playButton.innerHTML = 'playing';
     playButton.disabled = true;
     displayEl.innerHTML = null;
+    notesInput.disabled = true;
+    chordsInput.disabled = true;
+    limitInput.disabled = true;
     setupAudioProcessor();
     setTimeout(() => {
         playButton.disabled = false;
         playButton.innerHTML = 'play';
+        notesInput.disabled = false;
+        chordsInput.disabled = false;
+        limitInput.disabled = false;
     }, chordsInput.valueAsNumber * 10 * 1000)
 });
 
 const notesInput = document.querySelector('#notes');
 const chordsInput = document.querySelector('#chords');
 const limitInput = document.querySelector('#limit');
+const waveTypeInput = document.querySelector('#wave')
+const filterFreqInput = document.querySelector('#filter')
 
 // master controls
-let filterFreq = 1000;
-const sweepLength = 20;
-const attackTime = 5;
-const releaseTime = 5;
+let filterFreq = filterFreqInput.value;
+const sweepLength = 30;
+const attackTime = 10;
+const releaseTime = 10;
 let baseFreq = 30;
 
 function setupAudioProcessor() {
@@ -38,7 +46,7 @@ function setupAudioProcessor() {
     function playSweep(freq, delay) {
         const osc = new OscillatorNode(context, {
             frequency: freq,
-            type: 'sawtooth',
+            type: waveTypeInput.value,
         });
 
         const time = context.currentTime + delay;
@@ -55,7 +63,11 @@ function setupAudioProcessor() {
             type: 'lowpass',
         });
 
-        osc.connect(sweepEnv).connect(filter).connect(masterGain);
+        const panner = new StereoPannerNode(context, {
+            pan: (Math.random() * 2) - 1
+        })
+
+        osc.connect(sweepEnv).connect(panner).connect(filter).connect(masterGain);
         osc.start(time);
         osc.stop(time + sweepLength);
     }
@@ -80,7 +92,7 @@ function setupAudioProcessor() {
             // console.log('playchords', array[i]);
             setTimeout(() => {
                 playChord(array[i], i);
-            }, 10000 * i);
+            }, 15000 * i);
         }
     }
 

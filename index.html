@@ -42,18 +42,33 @@
 </head>
 <body>
     <fieldset>
+        <label for="wave">wave type:</label>
+        <select id="wave">
+            <option value="sine">sine</option>
+            <option value="sawtooth">sawtooth</option>
+            <option value="triangle">triangle</option>
+            <option value="triangle">square</option>
+        </select>
+
+        <label for="filter">lowpass filter frequency</label>
+        <!-- <input type="range" name="filter" id="filter" min="50" max="20000" value="1000"> -->
+        <input type="number" name="filter" id="filter" min="50" max="20000" value="1000">
+
         <label for="notes">
             # notes in each chord
         </label>
         <input type="number" min="1" max="10" id="notes" value="4">
+
         <label>
             # chords
         </label>
         <input type="number" min="1" id="chords" value="10">
+
         <label>
-            Harmonic limit
+            harmonic limit
         </label>
         <input type="number" min="0" max="31" id="limit" value="13">
+
         <button id="play-button">play sound</button>
     </fieldset>
     <ul class="display-chord"></ul>
