@@ -60,7 +60,7 @@ function setupAudioProcessor() {
             time + sweepLength - releaseTime
         );
         const filter = new BiquadFilterNode(context, {
-            frequency: filterFreq,
+            frequency: filterFreqInput.value,
             type: 'lowpass',
         });
 
@@ -68,13 +68,15 @@ function setupAudioProcessor() {
             pan: (Math.random() * 2) - 1
         })
 
-        osc.connect(sweepEnv).connect(panner).connect(filter).connect(masterGain);
+        osc.connect(sweepEnv)
+            .connect(panner)
+            .connect(filter)
+            .connect(masterGain);
         osc.start(time);
         osc.stop(time + sweepLength);
     }
 
     function playChord(chord, delay = 0) {
-        // console.log(chord)
         displayChord(chord)
         for (let i = 0; i < chord.length; i++) {
             const noteDelay = 1;
@@ -90,7 +92,6 @@ function setupAudioProcessor() {
 
     function playChords(array) {
         for (let i = 0; i < array.length; i++) {
-            // console.log('playchords', array[i]);
             setTimeout(() => {
                 playChord(array[i], i);
             }, timeBetweenChords * i);
@@ -100,10 +101,10 @@ function setupAudioProcessor() {
     const masterGain = new GainNode(context);
     masterGain.gain.value = 0.2;
 
-    const filter = new BiquadFilterNode(context, {
-        frequency: filterFreq,
-        type: 'lowpass',
-    });
+    // const filter = new BiquadFilterNode(context, {
+    //     frequency: filterFreqInput.value,
+    //     type: 'lowpass',
+    // });
     masterGain
         // .connect(filter)
         .connect(context.destination);
