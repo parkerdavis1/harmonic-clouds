@@ -1,6 +1,12 @@
 const displayEl = document.querySelector('.display-chord');
 const playButton = document.querySelector('#play-button');
 const stopButton = document.querySelector('#stop');
+
+const notesInput = document.querySelector('#notes');
+const limitInput = document.querySelector('#limit');
+const waveTypeInput = document.querySelector('#wave');
+const filterFreqInput = document.querySelector('#filter');
+
 playButton.addEventListener('click', () => {
         displayEl.innerHTML = null;
         clearInterval(intervalId)
@@ -14,19 +20,14 @@ stopButton.addEventListener('click', () => {
     playButton.innerHTML = 'start'
 })
 
-const notesInput = document.querySelector('#notes');
-const limitInput = document.querySelector('#limit');
-const waveTypeInput = document.querySelector('#wave');
-const filterFreqInput = document.querySelector('#filter');
-
 // master controls
-let filterFreq = filterFreqInput.value;
-const sweepLength = 30;
+const sweepLength = 28;
 const attackTime = 10;
 const releaseTime = 10;
 let baseFreq = 30;
 const timeBetweenChords = 15000;
 let context;
+let playedChords = []
 
 function setupAudioProcessor() {
     if (!context) {
@@ -74,9 +75,13 @@ function setupAudioProcessor() {
     }
 
     function displayChord(chord) {
-        const liEl = document.createElement('li');
-        liEl.innerHTML = chord.join(', ');
-        displayEl.appendChild(liEl);
+        playedChords = [chord, ...playedChords]
+        displayEl.innerHTML = ''
+        playedChords.map(c => {
+            const liEl = document.createElement('li')
+            liEl.innerHTML = c.join(', ');
+            displayEl.appendChild(liEl);
+        })
     }
 
     function playChords() {
