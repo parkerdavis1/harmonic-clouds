@@ -60,7 +60,7 @@ function setupAudioProcessor() {
         filter.frequency.setValueAtTime(filterFreqInput.value / 2, time);
         filter.frequency.linearRampToValueAtTime(filterFreqInput.value, time + attackTime);
         filter.frequency.linearRampToValueAtTime(
-            500,
+            filterFreqInput.value / 2,
             time + sweepLength - releaseTime
         );
 
