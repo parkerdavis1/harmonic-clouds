@@ -14,21 +14,21 @@ playButton.addEventListener('click', () => {
         notesInput.disabled = false;
         chordsInput.disabled = false;
         limitInput.disabled = false;
-    }, chordsInput.valueAsNumber * timeBetweenChords)
+    }, chordsInput.valueAsNumber * timeBetweenChords);
 });
 
 const notesInput = document.querySelector('#notes');
 const chordsInput = document.querySelector('#chords');
 const limitInput = document.querySelector('#limit');
-const waveTypeInput = document.querySelector('#wave')
-const filterFreqInput = document.querySelector('#filter')
+const waveTypeInput = document.querySelector('#wave');
+const filterFreqInput = document.querySelector('#filter');
 
 // master controls
 let filterFreq = filterFreqInput.value;
 const sweepLength = 30;
 const attackTime = 10;
 const releaseTime = 10;
-const baseFreq = 30;
+let baseFreq = 30;
 const timeBetweenChords = 15000;
 
 function setupAudioProcessor() {
@@ -65,8 +65,8 @@ function setupAudioProcessor() {
         });
 
         const panner = new StereoPannerNode(context, {
-            pan: (Math.random() * 2) - 1
-        })
+            pan: Math.random() * 2 - 1,
+        });
 
         osc.connect(sweepEnv)
             .connect(panner)
@@ -77,7 +77,7 @@ function setupAudioProcessor() {
     }
 
     function playChord(chord, delay = 0) {
-        displayChord(chord)
+        displayChord(chord);
         for (let i = 0; i < chord.length; i++) {
             const noteDelay = 1;
             playSweep(baseFreq * chord[i], noteDelay * i);
