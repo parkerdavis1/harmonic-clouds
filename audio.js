@@ -7,6 +7,7 @@ const limitInput = document.querySelector('#limit');
 const waveTypeInput = document.querySelector('#wave');
 const filterFreqInput = document.querySelector('#filter');
 const filterQInput = document.querySelector('#filterQ');
+const filterShapeInput = document.querySelector('#filterShape')
 
 playButton.addEventListener('click', () => {
     displayEl.innerHTML = null;
@@ -62,10 +63,17 @@ function setupAudioProcessor() {
             filterFreqInput.value,
             time + attackTime
         );
-        filter.frequency.linearRampToValueAtTime(
-            filterFreqInput.value / 2,
-            time + sweepLength - releaseTime
-        );
+        if (filterShapeInput.value === 'up') {
+            filter.frequency.linearRampToValueAtTime(
+                filterFreqInput.value * 2,
+                time + sweepLength - releaseTime
+            );
+        } else if (filterShapeInput.value === 'updown') {
+            filter.frequency.linearRampToValueAtTime(
+                filterFreqInput.value / 2,
+                time + sweepLength - releaseTime
+            );
+        }
 
         const panner = new StereoPannerNode(context, {
             pan: Math.random() * 2 - 1,
