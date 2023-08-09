@@ -1,24 +1,20 @@
 const displayEl = document.querySelector('.display-chord');
 const playButton = document.querySelector('#play-button');
+const stopButton = document.querySelector('#stop');
 playButton.addEventListener('click', () => {
-    playButton.innerHTML = 'playing';
-    playButton.disabled = true;
-    displayEl.innerHTML = null;
-    notesInput.disabled = true;
-    chordsInput.disabled = true;
-    limitInput.disabled = true;
-    setupAudioProcessor();
-    setTimeout(() => {
-        playButton.disabled = false;
-        playButton.innerHTML = 'play';
-        notesInput.disabled = false;
-        chordsInput.disabled = false;
-        limitInput.disabled = false;
-    }, chordsInput.valueAsNumber * timeBetweenChords);
-});
+        displayEl.innerHTML = null;
+        clearInterval(intervalId)
+        playButton.innerHTML = 'playing';
+        setupAudioProcessor();
+})
+
+let intervalId
+stopButton.addEventListener('click', () => {
+    clearInterval(intervalId);
+    playButton.innerHTML = 'start'
+})
 
 const notesInput = document.querySelector('#notes');
-const chordsInput = document.querySelector('#chords');
 const limitInput = document.querySelector('#limit');
 const waveTypeInput = document.querySelector('#wave');
 const filterFreqInput = document.querySelector('#filter');
@@ -30,20 +26,13 @@ const attackTime = 10;
 const releaseTime = 10;
 let baseFreq = 30;
 const timeBetweenChords = 15000;
+let context;
 
 function setupAudioProcessor() {
-    const context = new AudioContext();
-    function playTone(freq, delay = 0, wave = 'sine') {
-        const osc = new OscillatorNode(context, {
-            frequency: freq,
-            type: wave,
-        });
-        osc.connect(context.destination);
-        let time = context.currentTime + delay;
-        osc.start(time);
-        osc.stop(time + 1);
+    if (!context) {
+        context = new AudioContext();
     }
-
+    
     function playSweep(freq, delay) {
         const osc = new OscillatorNode(context, {
             frequency: freq,
@@ -76,7 +65,7 @@ function setupAudioProcessor() {
         osc.stop(time + sweepLength);
     }
 
-    function playChord(chord, delay = 0) {
+    function playChord(chord) {
         displayChord(chord);
         for (let i = 0; i < chord.length; i++) {
             const noteDelay = 1;
@@ -90,40 +79,29 @@ function setupAudioProcessor() {
         displayEl.appendChild(liEl);
     }
 
-    function playChords(array) {
-        for (let i = 0; i < array.length; i++) {
-            setTimeout(() => {
-                playChord(array[i], i);
-            }, timeBetweenChords * i);
-        }
+    function playChords() {
+            let notes = parseInt(notesInput.value)
+            let limit = parseInt(limitInput.value)
+            playChord(createChord(notes, limit))
     }
 
     const masterGain = new GainNode(context);
     masterGain.gain.value = 0.2;
 
-    // const filter = new BiquadFilterNode(context, {
-    //     frequency: filterFreqInput.value,
-    //     type: 'lowpass',
-    // });
     masterGain
-        // .connect(filter)
         .connect(context.destination);
 
-    function createChords(numOfNotes, numOfChords, limit = 13) {
-        let array = [];
-        for (let i = 0; i < numOfChords; i++) {
-            let chord = new Array(numOfNotes)
-                .fill(1)
-                .map((x) => Math.floor(Math.random() * limit) + 1);
-            array.push(chord);
-        }
-        return array;
+    function createChord(numOfNotes, limit) {
+        return new Array(numOfNotes)
+            .fill(1)
+            .map(x => Math.floor(Math.random() * limit) + 1);
     }
 
-    const randomChords = createChords(
-        notesInput.valueAsNumber,
-        chordsInput.valueAsNumber,
-        limitInput.valueAsNumber
-    );
-    playChords(randomChords);
+    // first chord
+    playChords();
+    
+    //subsequent chords
+    intervalId = setInterval(() => {
+        playChords();
+    }, timeBetweenChords)
 }
