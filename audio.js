@@ -8,17 +8,17 @@ const waveTypeInput = document.querySelector('#wave');
 const filterFreqInput = document.querySelector('#filter');
 
 playButton.addEventListener('click', () => {
-        displayEl.innerHTML = null;
-        clearInterval(intervalId)
-        playButton.innerHTML = 'playing';
-        setupAudioProcessor();
-})
+    displayEl.innerHTML = null;
+    clearInterval(intervalId);
+    playButton.innerHTML = 'playing';
+    setupAudioProcessor();
+});
 
-let intervalId
+let intervalId;
 stopButton.addEventListener('click', () => {
     clearInterval(intervalId);
-    playButton.innerHTML = 'start'
-})
+    playButton.innerHTML = 'start';
+});
 
 // master controls
 const sweepLength = 28;
@@ -27,13 +27,13 @@ const releaseTime = 10;
 let baseFreq = 30;
 const timeBetweenChords = 15000;
 let context;
-let playedChords = []
+let playedChords = [];
 
 function setupAudioProcessor() {
     if (!context) {
         context = new AudioContext();
     }
-    
+
     function playSweep(freq, delay) {
         const osc = new OscillatorNode(context, {
             frequency: freq,
@@ -75,38 +75,37 @@ function setupAudioProcessor() {
     }
 
     function displayChord(chord) {
-        playedChords = [chord, ...playedChords]
-        displayEl.innerHTML = ''
-        playedChords.map(c => {
-            const liEl = document.createElement('li')
+        playedChords = [chord, ...playedChords];
+        displayEl.innerHTML = '';
+        playedChords.map((c) => {
+            const liEl = document.createElement('li');
             liEl.innerHTML = c.join(', ');
             displayEl.appendChild(liEl);
-        })
+        });
     }
 
     function playChords() {
-            let notes = parseInt(notesInput.value)
-            let limit = parseInt(limitInput.value)
-            playChord(createChord(notes, limit))
+        let notes = parseInt(notesInput.value);
+        let limit = parseInt(limitInput.value);
+        playChord(createChord(notes, limit));
     }
 
     const masterGain = new GainNode(context);
     masterGain.gain.value = 0.2;
 
-    masterGain
-        .connect(context.destination);
+    masterGain.connect(context.destination);
 
     function createChord(numOfNotes, limit) {
         return new Array(numOfNotes)
             .fill(1)
-            .map(x => Math.floor(Math.random() * limit) + 1);
+            .map((x) => Math.floor(Math.random() * limit) + 1);
     }
 
     // first chord
     playChords();
-    
+
     //subsequent chords
     intervalId = setInterval(() => {
         playChords();
-    }, timeBetweenChords)
+    }, timeBetweenChords);
 }
