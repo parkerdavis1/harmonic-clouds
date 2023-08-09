@@ -6,7 +6,7 @@ const notesInput = document.querySelector('#notes');
 const limitInput = document.querySelector('#limit');
 const waveTypeInput = document.querySelector('#wave');
 const filterFreqInput = document.querySelector('#filter');
-const filterQInput = document.querySelector('#filterQ')
+const filterQInput = document.querySelector('#filterQ');
 
 playButton.addEventListener('click', () => {
     displayEl.innerHTML = null;
@@ -58,7 +58,10 @@ function setupAudioProcessor() {
         });
         filter.frequency.cancelScheduledValues(time);
         filter.frequency.setValueAtTime(filterFreqInput.value / 2, time);
-        filter.frequency.linearRampToValueAtTime(filterFreqInput.value, time + attackTime);
+        filter.frequency.linearRampToValueAtTime(
+            filterFreqInput.value,
+            time + attackTime
+        );
         filter.frequency.linearRampToValueAtTime(
             filterFreqInput.value / 2,
             time + sweepLength - releaseTime
@@ -68,13 +71,10 @@ function setupAudioProcessor() {
             pan: Math.random() * 2 - 1,
         });
 
-        const compressor = new DynamicsCompressorNode(context)
-
         osc.connect(sweepEnv)
             .connect(panner)
             .connect(filter)
-            .connect(masterGain)
-            .connect(compressor);
+            .connect(masterGain);
         osc.start(time);
         osc.stop(time + sweepLength);
     }
@@ -105,8 +105,9 @@ function setupAudioProcessor() {
 
     const masterGain = new GainNode(context);
     masterGain.gain.value = 0.2;
+    const compressor = new DynamicsCompressorNode(context);
 
-    masterGain.connect(context.destination);
+    masterGain.connect(compressor).connect(context.destination);
 
     function createChord(numOfNotes, limit) {
         return new Array(numOfNotes)
