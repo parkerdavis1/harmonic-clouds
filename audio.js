@@ -6,6 +6,7 @@ const notesInput = document.querySelector('#notes');
 const limitInput = document.querySelector('#limit');
 const waveTypeInput = document.querySelector('#wave');
 const filterFreqInput = document.querySelector('#filter');
+const filterQInput = document.querySelector('#filterQ')
 
 playButton.addEventListener('click', () => {
     displayEl.innerHTML = null;
@@ -49,19 +50,31 @@ function setupAudioProcessor() {
             0,
             time + sweepLength - releaseTime
         );
+
         const filter = new BiquadFilterNode(context, {
             frequency: filterFreqInput.value,
+            Q: filterQInput.value,
             type: 'lowpass',
         });
+        filter.frequency.cancelScheduledValues(time);
+        filter.frequency.setValueAtTime(filterFreqInput.value / 2, time);
+        filter.frequency.linearRampToValueAtTime(filterFreqInput.value, time + attackTime);
+        filter.frequency.linearRampToValueAtTime(
+            500,
+            time + sweepLength - releaseTime
+        );
 
         const panner = new StereoPannerNode(context, {
             pan: Math.random() * 2 - 1,
         });
 
+        const compressor = new DynamicsCompressorNode(context)
+
         osc.connect(sweepEnv)
             .connect(panner)
             .connect(filter)
-            .connect(masterGain);
+            .connect(masterGain)
+            .connect(compressor);
         osc.start(time);
         osc.stop(time + sweepLength);
     }

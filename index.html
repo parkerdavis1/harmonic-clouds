@@ -35,6 +35,12 @@
         ul {
             list-style-type: test;
         }
+
+        .hr {
+            grid-column: span 2;
+            border-bottom: 1px lightgray solid;
+            margin-block: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -51,6 +57,9 @@
         <!-- <input type="range" name="filter" id="filter" min="50" max="20000" value="1000"> -->
         <input type="number" name="filter" id="filter" min="50" max="20000" value="1000">
 
+        <label for="filterQ">filter Q</label>
+        <input type="number" name="filterQ" id="filterQ" min="0" max="20" value="1">
+        <div class="hr"></div>
         <label for="notes">
             # notes
         </label>
