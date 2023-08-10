@@ -26,9 +26,9 @@ stopButton.addEventListener('click', () => {
     playing = false;
     playButton.innerHTML = 'start';
     playButton.disabled = false;
-    timeoutIds.forEach(timeoutId => {
-        clearTimeout(timeoutId)
-    })
+    timeoutIds.forEach((timeoutId) => {
+        clearTimeout(timeoutId);
+    });
     timeoutIds = [];
 });
 
@@ -67,7 +67,7 @@ const sweepLengths = [10, 15, 20, 25, 30, 35, 40];
 const waveTypes = ['sine', 'triangle', 'square', 'sawtooth'];
 const filterShapeTypes = ['up', 'upDown', 'flat'];
 const filterQs = [1, 2, 3, 4, 5];
-const filterFreqs = [500, 1000, 2000, 3000];
+const filterFreqs = [500, 1000, 2000, 3000, 4000];
 const maxLimit = 31;
 const numsOfNotes = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 7];
 
@@ -110,34 +110,49 @@ function setupAudioProcessor() {
         if (filterFreqCheckbox.checked) {
             filterFreqInput.value = chooseRandomEntry(filterFreqs);
         }
+        if (filterShapeCheckbox.checked) {
+            filterShapeInput.value = chooseRandomEntry(filterShapeTypes);
+        }
+
         const filter = new BiquadFilterNode(context, {
             frequency: filterFreqInput.value,
             Q: filterQInput.value,
             type: 'lowpass',
         });
 
-        if (filterShapeCheckbox.checked) {
-            filterShapeInput.value = chooseRandomEntry(filterShapeTypes);
-        }
-
-        if (filterShapeInput.value !== 'flat') {
-            filter.frequency.cancelScheduledValues(time);
-            filter.frequency.setValueAtTime(filterFreqInput.value / 2, time);
-            filter.frequency.linearRampToValueAtTime(
-                filterFreqInput.value,
-                time + attackTime
-            );
-            if (filterShapeInput.value === 'up') {
+        switch (filterShapeInput.value) {
+            case 'flat':
+                break;
+            case 'down':
+                // filter.frequency.cancelScheduledValues(time);
+                filter.frequency.setValueAtTime(filterFreqInput.value, time);
+                filter.frequency.linearRampToValueAtTime(0, time + sweepLength);
+                break;
+            case 'up':
+                // filter.frequency.cancelScheduledValues(time);
+                filter.frequency.setValueAtTime(
+                    filterFreqInput.value / 4,
+                    time
+                );
                 filter.frequency.linearRampToValueAtTime(
-                    filterFreqInput.value * 2,
+                    filterFreqInput.value,
                     time + sweepLength - releaseTime
                 );
-            } else if (filterShapeInput.value === 'upDown') {
+                break;
+            case 'upDown':
+                // filter.frequency.cancelScheduledValues(time);
+                filter.frequency.setValueAtTime(
+                    filterFreqInput.value / 4,
+                    time
+                );
                 filter.frequency.linearRampToValueAtTime(
-                    filterFreqInput.value / 2,
+                    filterFreqInput.value,
+                    time + attackTime
+                );
+                filter.frequency.linearRampToValueAtTime(
+                    filterFreqInput.value / 4,
                     time + sweepLength - releaseTime
                 );
-            }
         }
 
         // ---- PANNER -----
@@ -194,7 +209,6 @@ function setupAudioProcessor() {
             }, chooseRandomEntry(timesBetweenChords));
             timeoutIds.push(timeoutId);
         }
-
     }
 
     function createChord(numOfNotes, limit) {
