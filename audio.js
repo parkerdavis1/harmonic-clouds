@@ -124,14 +124,13 @@ function setupAudioProcessor() {
             case 'flat':
                 break;
             case 'down':
-                // filter.frequency.cancelScheduledValues(time);
                 filter.frequency.setValueAtTime(filterFreqInput.value, time);
                 filter.frequency.linearRampToValueAtTime(0, time + sweepLength);
                 break;
             case 'up':
-                // filter.frequency.cancelScheduledValues(time);
                 filter.frequency.setValueAtTime(
-                    filterFreqInput.value / 4,
+                    // filterFreqInput.value / 4,
+                    0,
                     time
                 );
                 filter.frequency.linearRampToValueAtTime(
@@ -140,9 +139,9 @@ function setupAudioProcessor() {
                 );
                 break;
             case 'upDown':
-                // filter.frequency.cancelScheduledValues(time);
                 filter.frequency.setValueAtTime(
-                    filterFreqInput.value / 4,
+                    // filterFreqInput.value / 4,
+                    0,
                     time
                 );
                 filter.frequency.linearRampToValueAtTime(
@@ -150,7 +149,8 @@ function setupAudioProcessor() {
                     time + attackTime
                 );
                 filter.frequency.linearRampToValueAtTime(
-                    filterFreqInput.value / 4,
+                    // filterFreqInput.value / 4,
+                    0,
                     time + sweepLength - releaseTime
                 );
         }
