@@ -59,7 +59,7 @@ let timeoutIds = [];
 const sweepLength = 28;
 const attackTime = 10;
 const releaseTime = 10;
-let baseFreq = 27.5;
+let baseFreq = 32;
 
 // random options
 const timesBetweenChords = [14000, 15000, 16000];
