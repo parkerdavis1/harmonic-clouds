@@ -6,7 +6,7 @@
     <title>〜</title>
     <style>
         :root {
-            color-scheme: dark light;
+            color-scheme: dark;
         }
         @counter-style test {
             system: cyclic;
@@ -15,7 +15,7 @@
         }
         fieldset {
             display: grid;
-            grid-template-columns: auto auto;
+            grid-template-columns: auto auto auto;
             justify-content: start;
             align-items: center;
             gap: 0.5rem 1rem;
@@ -37,7 +37,7 @@
         }
 
         .hr {
-            grid-column: span 2;
+            grid-column: span 3;
             border-bottom: 1px lightgray solid;
             margin-block: 1rem;
         }
@@ -52,30 +52,36 @@
             <option value="triangle">triangle</option>
             <option value="square">square</option>
         </select>
-
+        <input type="checkbox" id="waveRandom">
+        
         <label for="filter">lowpass filter frequency</label>
-        <!-- <input type="range" name="filter" id="filter" min="50" max="20000" value="1000"> -->
-        <input type="number" name="filter" id="filter" min="50" max="20000" value="1000">
-
+        <input type="number" id="filter" min="50" max="20000" value="1000">
+        <input type="checkbox" id="filterRandom">
+        
         <label for="filterQ">filter Q</label>
-        <input type="number" name="filterQ" id="filterQ" min="0" max="20" value="1">
-
+        <input type="number" id="filterQ" min="0" max="20" value="1">
+        <input type="checkbox" id="filterQRandom">
+        
         <label for="filterShape">filter env shape</label>
-        <select name="filterShape" id="filterShape">
-            <option value="updown" selected>/\</option>
+        <select id="filterShape">
+            <option value="upDown" selected>/\</option>
             <option value="up">/</option>
+            <option value="flat">–</option>
         </select>
-
+        <input type="checkbox" id="filterShapeRandom">
+        
         <div class="hr"></div>
         <label for="notes">
             # notes
         </label>
         <input type="number" min="1" max="10" id="notes" value="4">
-
+        <input type="checkbox" id="notesRandom">
+        
         <label>
             harmonic limit
         </label>
         <input type="number" min="0" max="31" id="limit" value="13">
+        <input type="checkbox" id="limitRandom">
 
         <button id="play-button">start</button>
         <button id="stop">rest</button>
